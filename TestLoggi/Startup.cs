@@ -72,7 +72,7 @@ namespace LoggiTest
 
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Template Api", Version = "v1" });
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Logiin Api", Version = "v1" });
 
                 x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -134,7 +134,7 @@ namespace LoggiTest
             app.UseSwagger();
             app.UseSwaggerUI(x =>
             {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Template Api - V1");
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Logiin Api - V1");
                 x.RoutePrefix = string.Empty;
             });
         }
