@@ -1,4 +1,5 @@
 ﻿using Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -43,7 +44,7 @@ namespace TestLoggi.Api.Controllers
                 }
                 else
                 {
-                    return Unauthorized();
+                    return NotFound();
                 }
 
             }

@@ -1,4 +1,5 @@
 ﻿using Entity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -22,7 +23,7 @@ namespace User.Api.Controllers
 
         //Get
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IEnumerable<Entity.User>> GetUser()
         {
             return await UserService.GetAllUser();
@@ -31,7 +32,7 @@ namespace User.Api.Controllers
         //Get/{id}
         [Route("{id}")]
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Entity.User>> GetUser(int? id)
         {
             if (id == null)
@@ -44,7 +45,7 @@ namespace User.Api.Controllers
 
         //Post
         [HttpPost]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Entity.User>> PostUser([FromBody] Entity.User data)
         {
             if (!ModelState.IsValid)
@@ -55,6 +56,7 @@ namespace User.Api.Controllers
             {
                 try
                 {
+                    data.CreateDate = DateTime.Now;
                     var datas = await UserService.PostUser(data);
                     return Ok(datas);
                 }
@@ -68,7 +70,7 @@ namespace User.Api.Controllers
         //Put
         [Route("{id}")]
         [HttpPut]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Entity.User>> PutUser(int id, [FromBody] Entity.User User)
         {
             if (id != User.Id)
@@ -92,7 +94,7 @@ namespace User.Api.Controllers
         //Delete
         [Route("{id}")]
         [HttpDelete]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Entity.User>> DeleteUser(int? id)
         {
             if (id == null)

@@ -14,7 +14,9 @@ using Microsoft.OpenApi.Models;
 using Service;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +33,6 @@ namespace LoggiTest
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
 
             services.AddControllersWithViews()
                     .AddNewtonsoftJson(options =>
@@ -55,7 +56,8 @@ namespace LoggiTest
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
+            })
+            .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -68,38 +70,41 @@ namespace LoggiTest
                 };
             });
 
-            services.AddScoped<Context, Context>();
-            services.AddTransient<UserService, UserService>();
-
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "Template Api", Version = "v1" });
 
                 x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+                    Description = @"JWT Authorization header using the Bearer scheme.",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
 
-                x.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                  {
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+                      new OpenApiSecurityScheme
+                      {
+                        Reference = new OpenApiReference
+                          {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                          },
+                          Scheme = "oauth2",
+                          Name = "Bearer",
+                          In = ParameterLocation.Header,
 
+                        },
+                        new List<string>()
+                      }
+                    });
+            });
+            services.AddControllers();
+            services.AddScoped<Context, Context>();
+            services.AddTransient<UserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -110,13 +115,21 @@ namespace LoggiTest
             }
 
             app.UseCors("CorsPolicy");
-
             app.UseMvc();
-
             app.UseResponseCompression();
+
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(x =>

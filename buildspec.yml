@@ -4,7 +4,7 @@ version: 0.2
 
 env:
     variables:
-        PROJECT: TestLoggi
+        PROJECT: TestLogiin
 
 phases:   
     pre_build:

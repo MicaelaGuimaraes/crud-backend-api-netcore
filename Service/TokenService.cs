@@ -17,15 +17,15 @@ namespace Service
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
-                        {
-                            new Claim("Id", user.Id.ToString()),
-                            new Claim("Age", user.Age.ToString()),
-                            new Claim("Name", user.Name.ToString()),
-                            new Claim("Email", user.Email.ToString()),
-                            new Claim("Address", user.Address.ToString()),
-                            new Claim("CreateDate", user.CreateDate.ToString()),
-                        }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                {
+                     new Claim("Name", user.Name.ToString()),
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Age", user.Age.ToString()),
+                    new Claim("Address", user.Address.ToString()),
+                    new Claim("Email", user.Email.ToString()),
+                    new Claim("CreateDate", user.CreateDate.ToString()),
+                }),
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
