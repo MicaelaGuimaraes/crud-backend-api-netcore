@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestLoggi.Entity\Entity.csproj" />
+    <ProjectReference Include="..\TestLogiin.Entity\Entity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
